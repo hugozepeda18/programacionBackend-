@@ -3,7 +3,7 @@ class Contenedor {
     constructor(fileName) {
         this.fs = require('fs')
         this.objects = []
-        let beginPath = './'
+        let beginPath = './ManejoDeArchivos_ZepedaRuizHugo/'
         let endPath = '.txt'
         this.path = beginPath + fileName + endPath
         try {
