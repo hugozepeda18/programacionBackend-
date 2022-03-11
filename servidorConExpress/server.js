@@ -22,7 +22,7 @@ app.get('/productos', (req, res) => {
     res.send(cont1.getAll())
 })
 
-let max = 3
+let max = 2
 app.get('/productoRandom', (req, res) => {
     res.send(cont1.getById(Math.floor(Math.random() * max) + 1))
 })
