@@ -1,3 +1,5 @@
 /servidorConExpress/node_modules/
 /API_RESTful/node_modules/
 /ejerciciosClase/
+
+.DS_Store
