@@ -11,7 +11,7 @@ app.use(bodyParse.urlencoded({ extended: false}))
 app.use("/api", apiRouter)
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "./../html/form.html"))
+    res.sendFile(path.join(__dirname, "./public/index.html"))
 })
 
 app.listen(PORT, () => {
