@@ -28,7 +28,6 @@ router.post("/productos", (req, res)=> {
         return
     }
     return res.json({message: "Product Added", id: newProd.id})
-
 })
 
 router.get("/productos/:id", (req, res)=> {
@@ -53,10 +52,9 @@ router.put("/productos/:id", (req, res)=> {
         return res.json({error: "Product not found"}).status(204);
         
     }
-
     return res.json({"message": "Product updated"})
-
 })
+
 router.delete("/productos/:id", (req, res)=> {
     const id = parseInt(req.params.id)
 
@@ -65,8 +63,6 @@ router.delete("/productos/:id", (req, res)=> {
     if(delProd.length == 0){
         return res.json({error: "Product not found"}).status(204);
     }
-
     return res.send(delProd)
-
 })
 module.exports = router
