@@ -36,7 +36,6 @@ class Contenedor {
 
     getById(number) {
         console.log("Selected id is: " + number)
-        number--;
         for (let i = 0; i < this.objects.length; i++) {
             let obj = Object.values(this.objects)[i]
             if(obj[Object.keys(obj)[3]] == number){
