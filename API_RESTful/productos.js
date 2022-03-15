@@ -54,8 +54,8 @@ const p = new Productos()
 p.add({'q': 12})
 console.log(p.get(1))
 console.log(p.update(1, {
-    "title": "La sirenita",
-    "price": 123,
-    "url": "www.myn.com"
+    "title": "Breaking Bad Season 1",
+    "price": 200,
+    "url": "https://www.google.com/search?q=breaking+bad&tbm=isch&ved=2ahUKEwjJm_f-98j2AhXYF80KHR6BCooQ2-cCegQIABAA&oq=breaking+bad&gs_lcp=CgNpbWcQAzIICAAQgAQQsQMyBAgAEEMyCAgAEIAEELEDMggIABCABBCxAzIECAAQQzIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEOgcIIxDvAxAnOggIABCxAxCDAToLCAAQgAQQsQMQgwE6BwgAELEDEEM6CggAELEDEIMBEEM6BggAEAoQGFCKBVjNFWCtFmgBcAB4AIABXIgB3AiSAQIxNJgBAKABAaoBC2d3cy13aXotaW1nwAEB&sclient=img&ei=kvQwYsmKFNivtAaegqrQCA&bih=937&biw=1680&client=firefox-b-d#imgrc=PSwcmLJcRjPU2M"
 }))
 console.log(p.get(1))
