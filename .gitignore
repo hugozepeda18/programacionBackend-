@@ -1,5 +1,8 @@
 /servidorConExpress/node_modules/
 /API_RESTful/node_modules/
+/motoresPlantillas/ejs/node_modules/
+/motoresPlantillas/pug/node_modules/
+/motoresPlantillas/handleBars/node_modules/
 /ejerciciosClase/
 
 .DS_Store
