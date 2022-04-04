@@ -4,5 +4,6 @@
 /motoresPlantillas/pug/node_modules/
 /motoresPlantillas/handleBars/node_modules/
 /ejerciciosClase/
+/webSockets/node_modules/
 
 .DS_Store
