@@ -4,6 +4,7 @@ const path = require("path")
 const bodyParse = require("body-parser")
 
 const PORT = 8080
+const produccion = process.env.PORT
 const app = express()
 
 app.use(express.json())
@@ -15,5 +16,9 @@ app.get("/", (req, res) => {
 })
 
 app.listen(PORT, () => {
+    console.log("Express is running")
+})
+
+app.listen(produccion, () => {
     console.log("Express is running")
 })
