@@ -1,45 +1,89 @@
+import fs from 'fs'
+
 class Productos{
-    static productosMap = []
     constructor(){
-        console.log(Productos.productosMap)
+        try{
+            this.productos = JSON.parse(fs.readFileSync('./persistencia/productos.json'))
+        }catch(err){
+            console.log("Products list is empty, generating list")
+            this.productos = []
+            return
+        }    
     }
 
-    add(prod){
-        const id = Productos.productosMap.length + 1
-        prod.id = id
-        
-        Productos.productosMap.push(prod)
-        return prod
+    save2File(products){
+        let parsed = JSON.stringify(products)
+        try{
+            fs.writeFile('./persistencia/productos.json', parsed, 'utf-8')
+        }catch(err){
+            console.log("unable to save products in file system")
+            return 1
+        }
+        console.log("Products saved successfully")
+        return 0
     }
 
-    remove(id){
-        const prodIdx = Productos.productosMap.findIndex(element => element.id === id)
-        const delprod = Productos.productosMap.splice(prodIdx, 1) 
+    add(newProd){
+        console.log("Adding new product")
+        try{
+            var currIdx = this.productos.slice(-1)[0].id
+        } catch(err){
+            console.log("Products list is empty, generating id")
+            currIdx = 0
+        }
         
-        return delprod
+        newProd.id = currIdx + 1
+        newProd.timestamp = Date.now()
+        this.productos.push(newProd)
+        let res = this.save2File(this.productos)
+        if (res){
+            console.log("Error while saving file")
+            return 3
+        }
+        return 0
     }
 
     get(id){
-        const prod = Productos.productosMap.find((elem) => elem.id === id)
+        let prod = this.productos.find(prod => prod.id == id)
+        if(!prod){
+            console.log("Product does not exist")
+        }
         return prod
     }
 
     getAll(){
-        return Productos.productosMap
+        return this.productos
     }
 
-    update(id, newProd){
-        let updated = false
-        Productos.productosMap.forEach((elem, idx) => {
-            if(elem.id === id){
-                newProd.id = id
-                Productos.productosMap[idx] = newProd
-                updated = true
-            }
-            
-        })
-        if(updated){
-            return newProd
+    remove(id){
+        console.log(`Removing product with ID ${id}`)
+        let newProducts = this.productos.filter(prod => prod.id != id)
+        if (JSON.stringify(newProducts) == JSON.stringify(this.productos)){
+            console.log("Product does not exist")
+            return 1
+        }
+        this.productos = newProducts
+        let res = this.save2File(this.productos)
+        if (res){
+            console.log("Error while saving file")
+            return 3
+        }
+        return 0
+    }
+
+    update(id, knownProduct){
+        console.log("Updating product")
+        let idx = this.productos.findIndex(prod => prod.id == id)
+        if(idx == -1){
+            console.log("Product does not exist, add a new product instead")
+            return 1
+        }
+        knownProduct.id = id
+        this.productos[idx] = knownProduct
+        let res = this.save2File(this.productos)
+        if (res){
+            console.log("Error while saving file")
+            return 3
         }
         return 0
     }
@@ -47,18 +91,3 @@ class Productos{
 }
 
 module.exports = new Productos()
-
-const p = new Productos()
-
-p.add({'q': 12})
-console.log(p.get(1))
-p.update(1, {
-    "timestamp": Date.now(),
-    "nombre": "Breaking Bad Season 1 DVD",
-    "descripcion": "DVD",
-    "codigo": "DVD-BB-1",
-    "foto": "https://www.google.com/search?q=breaking+bad&tbm=isch&ved=2ahUKEwjJm_f-98j2AhXYF80KHR6BCooQ2-cCegQIABAA&oq=breaking+bad&gs_lcp=CgNpbWcQAzIICAAQgAQQsQMyBAgAEEMyCAgAEIAEELEDMggIABCABBCxAzIECAAQQzIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEOgcIIxDvAxAnOggIABCxAxCDAToLCAAQgAQQsQMQgwE6BwgAELEDEEM6CggAELEDEIMBEEM6BggAEAoQGFCKBVjNFWCtFmgBcAB4AIABXIgB3AiSAQIxNJgBAKABAaoBC2d3cy13aXotaW1nwAEB&sclient=img&ei=kvQwYsmKFNivtAaegqrQCA&bih=937&biw=1680&client=firefox-b-d#imgrc=PSwcmLJcRjPU2M",
-    "precio": 200,
-    "stock": 50,
-})
-console.log(p.get(1))

@@ -2,7 +2,7 @@ const express = require("express")
 const productContainer = require("./utils/productos")
 const carritoContainer = require("./utils/carrito")
 
-const administrador = false;
+const administrador = true;
 
 const { Router } = express
 
@@ -31,21 +31,33 @@ router.get("/productos/:id", (req, res)=> {
     const producto = productContainer.get(id)
 
     if(!producto){
-        return res.json({error: "Product not found"}).status(204);
+        res.status(500).send({"Error": `No product with ID ${id}`}).end()
+        return
     }
     return res.send(producto)
+})
+
+router.get("/carrito/:id/productos", (req, res)=> {
+    const id = parseInt(req.params.id)
+
+    const carrito = carritoContainer.get(id)
+
+    if(!producto){
+        res.status(500).send({"Error": `No carrito with ID ${id}`}).end()
+        return
+    }
+    return res.send(carrito)
 })
 
 router.post("/productos", (req, res)=> {
     if(administrador){
         const producto = req.body
         const newProd = productContainer.add(producto)
-
-        if(!newProd){
-            res.json({Error: "Product couldnt be added"}).status(500)
-            return
+        if(newProd == 3){
+            return res.status(500).send({message: "Product not added"});
         }
-        return res.json({message: "Product Added", id: newProd.id})
+        return res.status(201).send({message: "Product added", id: newProd.id});
+
     } else {
         res.status(400).send({"Error": -1, "Descripcion": "ruta /productos método POST no autorizada"}).end()
         return
@@ -54,14 +66,31 @@ router.post("/productos", (req, res)=> {
 })
 
 router.post("/carrito", (req, res)=> {
-    const id = carritoContainer.add()
+    let carrito = carritoContainer.add()
 
-    if(id <= 0){
-        res.json({Error: "Carrito couldnt be created"}).status(500)
-        return
+    if(carrito == 3){
+        console.warn("Shopping car File is not saved") 
     }
-    return res.json({message: "Carrito created", id: id})
+    return res.status(201).send({message: "Carrito created", id: carrito})
 
+})
+
+router.post("/carrito/:id/productos/:idProd", (req, res) => {
+    let idCar = req.params.id
+    let idProd = req.params.idProd
+
+    let newProd = productContainer.getProduct(idProd)
+    if(!newProd){
+        res.status(204).send({message: "Product does not exists"})
+    }
+    let carrito = carritoContainer.addProduct(idCar, newProd)
+    if(resContainer){
+        return res.status(204).send({message: "Shopping Car not found"});
+    }
+    else if(resContainer == 3){
+        console.log("Error while saving file")
+    }
+    return res.status(201).send({message: "Shopping car updated"});
 })
 
 router.put("/productos/:id", (req, res)=> {
@@ -71,12 +100,13 @@ router.put("/productos/:id", (req, res)=> {
 
         const updatedProd = productContainer.update(id, product)
 
-        if(!updatedProd){
-            
-            return res.json({error: "Product not found"}).status(204);
-            
+        if(updatedProd){
+            return res.status(204).send({message: "Product not found"});
         }
-        return res.json({"message": "Product updated"})
+        else if(updatedProd == 3){
+            console.log("Error while saving file")
+        }
+        return res.status(201).send({message: "Product updated"});
     } else {
         res.status(400).send({"Error": -1, "Descripcion": "ruta /productos/:id método PUT no autorizada"}).end()
         return
@@ -89,27 +119,44 @@ router.delete("/productos/:id", (req, res)=> {
         const id = parseInt(req.params.id)
 
         const delProd = productContainer.remove(id)
-
-        if(delProd.length == 0){
-            return res.json({error: "Product not found"}).status(204);
+        if(delProd){
+            return res.status(204).send({message: "Product not found"});
         }
-        return res.send(delProd)
+        else if(delProd == 3){
+            console.log("Error while saving file")
+        }
+        return res.status(200).send({message: "Product deleted"});
     } else {
         res.status(400).send({"Error": -1, "Descripcion": "ruta /productos/:id método DELETE no autorizada"}).end()
         return
     }
-    
 })
 
 router.delete("/carrito/:id", (req, res)=> {
     const id = parseInt(req.params.id)
 
-    const delCarrito = productContainer.remove(id)
+    const delCarrito = carritoContainer.remove(id)
     
-    if(delCarrito.length == 0){
-        return res.json({error: "Carrito not found"}).status(204);
+    if(delCarrito){
+        return res.status(204).send({message: "Shopping car not found"});
     }
-
-    return res.send(delCarrito)
+    else if(delCarrito == 3){
+        console.log("Error while saving file")
+    }
+    return res.status(200).send({message: "Shopping car deleted"});
 })
+
+router.delete("carrito/:id/productos/:idProd", (req,res) => {
+    let idCar = req.params.id
+    let idProd = req.params.idProd
+    let resContainer = carritoContainer.removeProduct(idCar, idProd)
+    if(resContainer){
+        return res.status(204).send({message: "Shopping Car not found or product not in the shopping car"});
+    }
+    else if(resContainer == 3){
+        console.log("Error while saving file")
+    }
+    return res.status(200).send({message: "Product deleted from car"});
+})
+
 module.exports = router
