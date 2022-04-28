@@ -8,15 +8,16 @@ const bodyParser = require('body-parser');
 const app = express()
 const port = 8080;
 
+app.set("views", path.join(__dirname, 'views'))
+
 const hbs = handlebars.create({
     extname: ".hbs",
     defaultLayout: "index.hbs",
-    partialsDir:  "./views/partials",
-    layoutsDir: './views/layouts'
+    partialsDir:  "./motoresPlantillas/handleBars/views/partials",
+    layoutsDir: './motoresPlantillas/handleBars/views/layouts'
     });
 
 app.engine('hbs', hbs.engine);
-app.set("views", path.join(__dirname, 'views'))
 app.set('view engine', 'hbs');
 
 app.use(express.static("public"))
