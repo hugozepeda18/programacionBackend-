@@ -1,16 +1,31 @@
 {
-  "name": "2daentregaproyectofinal",
+  "name": "primer-entrega",
+  "type": "module",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon --experimental-json-modules ./src/server/server.js",
+    "transpile": "babel ./src/server --out-dir dist-server",
+    "clean": "rimraf dist-server",
+    "build": "npm-run-all clean transpile"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
-    "express": "^4.18.0",
-    "node": "^17.7.2"
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.8",
+    "@babel/preset-env": "^7.16.11",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "firebase": "^9.7.0",
+    "firebase-admin": "^10.1.0",
+    "nodemon": "^2.0.15",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.17.0",
+    "mongoose": "^6.3.1"
   }
 }
