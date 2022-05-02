@@ -1,4 +1,4 @@
-# coderHouse_Proyecto
+# 2daEntregaProyectoFinal
 
 # Before running
 copy the .envTemplate and paste it with name .env
