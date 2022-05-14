@@ -1,5 +1,6 @@
 {
-  "name": "mocksnormalizacion",
+  "type": "module",
+  "name": "ejerciciogenerico2",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,7 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.1",
-    "faker": "^5.5.3",
-    "normalizr": "^3.6.2"
+    "faker": "^5.5.3"
   }
 }
