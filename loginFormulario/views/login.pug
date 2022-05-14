@@ -1,0 +1,15 @@
+html
+  head
+    title Login page
+    style
+      include ../style/style.css
+  body
+     
+    form(method="POST", action="/user/login")
+        label(for = "username") Username:
+        input(type = "text", name = "username")
+        br
+        label(for = "password") Password:
+        input(type = "password", name = "password")
+        br
+        input(type = "submit", name = "submit", value = "submit")
