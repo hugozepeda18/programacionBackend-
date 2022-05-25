@@ -1,14 +1,17 @@
 const express = require('express')
 const session = require('express-session')
-const cookieParser = require('cookie-parser')
-const hbs = require('express-handlebars')
+const cookieParser = require ('cookie-parser')
+const handlebars = require('express-handlebars')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
+const path = require("path")
+const bcrypt = require('bcryptjs');
 
 const usuarios = []
 
 const app = express()
-app.use(express.urlencoded({ extended: true}))
+
+app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
 app.use(cookieParser())
@@ -18,7 +21,7 @@ app.use(
         resave: false,
         saveUninitialized: false,
         cookie: {
-            maxAge: 20000, //20 SEG
+            maxAge: 600000,
         }
     })
 )
@@ -26,19 +29,21 @@ app.use(
 app.use(passport.initialize())
 app.use(passport.session())
 
-//ESTRATEGIAS
+//STRATEGY
 passport.use('register', 
     new LocalStrategy(
         { passReqToCallback: true },
         (req, username, password, done) => {
-            const existe = usuarios.find( usuario => usuario.nombre === username)
+            const existe = usuarios.find( usuario => usuario.email === username)
             if(existe){
                 console.log('User exits')
                 return done(null, false)
             } else {
-                usuarios.push({nombre: username, password: password})
-                console.log(usuarios)
-                done(null, {nombre: username})
+                bcrypt.hash(password, 10).then(hash => {
+                    console.log(hash)
+                    usuarios.push({email: username, password: hash})
+                    done(null, {email: username})
+                })
             }
         }
     )
@@ -47,14 +52,15 @@ passport.use('register',
 passport.use('login', 
     new LocalStrategy(
         (username, password, done) => {
-            console.log('IN')
             const existe = usuarios.find( usuario => {
-                return usuario.nombre === username && usuario.password === password
+                if(!bcrypt.compare(usuario.password, password)){return done(null, false)}
+                return usuario.email === username 
             }) 
             console.log(existe)
             if(!existe){
                 return done(null, false)
             } else {
+                console.log('Logged')
                 return done(null, existe)
             }
         }
@@ -62,59 +68,63 @@ passport.use('login',
 )
 
 passport.serializeUser((usuario, done) => {
-    done(null, usuario.nombre)
+    console.log(usuario.email + ' serializado')
+    done(null, usuario.email)
 })
 
-passport.deserializeUser((nombre, done) => {
-    const usuarioDZ = usuarios.find( usuario => usuario.nombre === nombre)
+passport.deserializeUser((username, done) => {
+    const usuarioDZ = usuarios.find( usuario => usuario.email === username)
+    console.log(JSON.stringify(usuarioDZ) + ' deserializado')
     done(null, usuarioDZ)
 })
 
-//PLANTILLAS
-app.set('views', './src/views')
+//TEMPLATE
+app.set("views", path.join(__dirname, 'views'))
 
-app.engine(
-    '.hbs',
-    hbs.engine({
-        defaultLayout: 'main',
-        layoutsDir: './src/views/layouts',
-        extname: '.hbs'
-    })
-)
+const hbs = handlebars.create({
+    extname: ".hbs",
+    defaultLayout: "main.hbs",
+    layoutsDir: './views/layouts'
+});
 
-//RUTAS
+app.engine('hbs', hbs.engine);
+app.set('view engine', 'hbs');
+
+//ROUTES
 app.get('/registrar', (req, res) => {
     res.render('register')
 })
 
 app.post('/registrar', passport.authenticate('register', {
     successRedirect: '/login',
-    failureRedirect: '/login-error'
+    failureRedirect: '/signup-error'
 }))
 
 app.get('/login', (req, res) => {
-    req.logOut()
     res.render('login')
 })
 
 app.post('/login', passport.authenticate('login', {
     successRedirect: '/datos',
     failureRedirect: '/login-error'
-})
-)
+}))
 
 app.get('/login-error', (req, res) => {
     res.render('login-error')
 })
 
-app.get('/datos', (req, res) => {
-    const { nombre, direccion } = req.user
-    res.send( {nombre, direccion} )
+app.get('/signup-error', (req, res) => {
+    res.render('signup-error')
 })
 
 app.get('/logout', (req, res) => {
-    req.logOut()
-    res.render('/login')
+    req.session.destroy()
+    res.redirect('login')
+})
+
+app.get('/datos', (req, res) => {
+    const { email, password } = req.user
+    res.render('datos', {email})
 })
 
 //SERVER

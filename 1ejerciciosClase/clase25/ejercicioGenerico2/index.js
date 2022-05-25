@@ -28,7 +28,6 @@ passport.serializeUser((usuario, done) => {
 
 passport.deserializeUser((nombre, done) => {
     const usuarioDz = usuarios.find(usuario => {usuario.nombre === nombre})
-    console.log
     done(null, usuarioDz)
 })
 
@@ -88,11 +87,11 @@ app.post('/login', passport.authenticate('login',
 ))
 
 app.get('/datos', isLogged, (req, res) => {
-    const { nombre, direccion } = req.session
+    const { nombre, password } = req.session
     res.send({ nombre, password})
 })
 
-app.get('/logout', (req, res) => {
+app.get('/logout', (req, res) => { 
     req.session.destroy()
     res.render('login')
 })
