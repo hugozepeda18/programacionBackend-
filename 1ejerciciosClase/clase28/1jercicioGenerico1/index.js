@@ -25,7 +25,7 @@ const arrTPD = args.map(elemento => {
     }
 })
 
-console.log(error)
+console.log('Is there an error ? ' + error)
 
 if(error){
     const objeto = {error: {descripción: 'error tipos de datos', numeros: args, tipos: arrTPD}}

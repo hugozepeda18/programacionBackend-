@@ -1,6 +1,8 @@
-import express from 'express'
+const express = require("express")
 
-const router = express.Router()
+const { Router } = express
+
+const router = Router()
 
 router.get('/randoms/:id', (req, res) => {
     let numbers = parseInt(req.params.id)
@@ -30,4 +32,4 @@ router.get('/randoms/:id', (req, res) => {
     res.send({numero: numbers, numeros: arreglo, contador: obj})
 })
 
-export default router
+module.exports = router

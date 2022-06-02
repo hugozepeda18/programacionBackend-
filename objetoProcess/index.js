@@ -9,6 +9,7 @@ const path = require("path")
 const bcrypt = require('bcryptjs');
 const parseArgs = require('minimist')
 require('dotenv').config()
+const apiRouter = require("./api")
 //const apiRouter = require("./router/router.js")
 /*
 import express from 'express'
@@ -50,7 +51,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
 //DESAFIO --> RUTA /api/randoms
-//app.use('/api/randoms', apiRouter)
+app.use("/api", apiRouter)
 
 app.use(cookieParser())
 app.use(
