@@ -2,7 +2,7 @@ const cluster = require('cluster')
 const http = require('http')
 const numCPUs = require('os').cpus().length
 
-console.log(numCPUs)
+console.log('Número de CPUs: ' + numCPUs)
 
 if(cluster.isPrimary){
     console.log(`Master ${process.pid} is running`)

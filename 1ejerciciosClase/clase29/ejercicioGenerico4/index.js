@@ -1,4 +1,3 @@
-const cluster = require('cluster')
 const http = require('http')
 const PORT = process.argv[2] || 8080
 
@@ -10,4 +9,4 @@ http.createServer((req, res) => {
 
 console.log(`worker ${process.pid} is running`)
 
-//NODEMON CREA UN PROCESO PADRE FORKEANDO NUESTRO SERVER
+//TODO: Checkout how to enable the script execution with pm2 

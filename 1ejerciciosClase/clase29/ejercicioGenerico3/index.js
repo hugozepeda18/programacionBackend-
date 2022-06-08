@@ -10,4 +10,4 @@ http.createServer((req, res) => {
 
 console.log(`worker ${process.pid} is running`)
 
-//NODEMON CREA UN PROCESO PADRE FORKEANDO NUESTRO SERVER
+//TODO: Checkout how to enable the script execution with forever

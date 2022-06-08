@@ -19,3 +19,6 @@ if(cluster.isPrimary){
         res.end('hello world')
     }).listen(8000)
 }
+
+//PROCESOS DE NODE JS ACTIVOS: tasklist /fi "imagename eq node.exe"
+//MATAR PROCESOS: taskkill /pid <PID> /f 

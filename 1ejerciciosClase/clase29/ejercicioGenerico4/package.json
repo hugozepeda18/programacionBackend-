@@ -1,5 +1,5 @@
 {
-  "name": "ejerciciogenerico2",
+  "name": "ejerciciogenerico4",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,8 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cluster": "^0.7.7",
-    "http": "^0.0.1-security",
-    "nodemon": "^2.0.16"
+    "pm2": "^5.2.0"
   }
 }
