@@ -11,17 +11,16 @@ const parseArgs = require('minimist')
 require('dotenv').config()
 const apiRouter = require("./api")
 
+//DESAFIO
 const cluster = require('cluster')
-const MODO = parseArgs(process.argv.slice(3))
+const opt = {alias: {m: 'modo'}, default: {modo: 'FORK'}}
+const MODO = parseArgs(process.argv.slice(3), opt)
 
-//PROCESADORES
+//DESAFIO --> PROCESADORES
 const numCPUs = require('os').cpus().length
 
 const options = {alias: {p: 'puerto'}, default: {puerto: '8080'}}
 const PORT = parseArgs(process.argv.slice(2), options)
-
-//MÓDULO NATIVO CLUSTER
-
 
 //DESAFIO --> RUTA CON # PROCESADORES /INFO 
 const directoryName = path.basename(__dirname);
@@ -37,132 +36,151 @@ const sessionWord = process.env.PALABRA
 
 const usuarios = []
 
-const app = express()
+//MÓDULO NATIVO CLUSTER
+if(MODO.modo === 'CLUSTER' && cluster.isPrimary){
+    console.log(`Número de procesadores: ${numCPUs}`)
+    console.log(`PID MASTER ${process.pid}`)
 
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
+    for(let i = 0; i < numCPUs; i++){
+        cluster.fork()
+    }
 
-app.use("/api", apiRouter)
-
-app.use(cookieParser())
-app.use(
-    session({
-        secret: sessionWord,
-        resave: false,
-        saveUninitialized: false,
-        cookie: {
-            maxAge: parseInt(sessionAlive),
-        }
+    cluster.on('exit', (worker) => {
+        console.log('Worker ',worker.process.pid, ' died ', new Date().toLocaleString())
+        cluster.fork()
     })
-)
+    
+}else{
+    console.log(`MODO: ${MODO.modo}`)
+    const app = express()
 
-app.use(passport.initialize())
-app.use(passport.session())
+    app.use(express.urlencoded({ extended: true }))
+    app.use(express.json())
 
-//STRATEGY
-passport.use('register', 
-    new LocalStrategy(
-        { passReqToCallback: true },
-        (req, username, password, done) => {
-            const existe = usuarios.find( usuario => usuario.email === username)
-            if(existe){
-                console.log('User exits')
-                return done(null, false)
-            } else {
-                bcrypt.hash(password, 10).then(hash => {
-                    console.log(hash)
-                    usuarios.push({email: username, password: hash})
-                    done(null, {email: username})
-                })
+    app.use("/api", apiRouter)
+
+    app.use(cookieParser())
+    app.use(
+        session({
+            secret: sessionWord,
+            resave: false,
+            saveUninitialized: false,
+            cookie: {
+                maxAge: parseInt(sessionAlive),
             }
-        }
+        })
     )
-)
 
-passport.use('login', 
-    new LocalStrategy(
-        (username, password, done) => {
-            const existe = usuarios.find( usuario => {
-                if(!bcrypt.compare(usuario.password, password)){return done(null, false)}
-                return usuario.email === username 
-            }) 
-            console.log(existe)
-            if(!existe){
-                return done(null, false)
-            } else {
-                console.log('Logged')
-                return done(null, existe)
+    app.use(passport.initialize())
+    app.use(passport.session())
+
+    //STRATEGY
+    passport.use('register', 
+        new LocalStrategy(
+            { passReqToCallback: true },
+            (req, username, password, done) => {
+                const existe = usuarios.find( usuario => usuario.email === username)
+                if(existe){
+                    console.log('User exits')
+                    return done(null, false)
+                } else {
+                    bcrypt.hash(password, 10).then(hash => {
+                        console.log(hash)
+                        usuarios.push({email: username, password: hash})
+                        done(null, {email: username})
+                    })
+                }
             }
-        }
+        )
     )
-)
 
-passport.serializeUser((usuario, done) => {
-    console.log(usuario.email + ' serializado')
-    done(null, usuario.email)
-})
+    passport.use('login', 
+        new LocalStrategy(
+            (username, password, done) => {
+                const existe = usuarios.find( usuario => {
+                    if(!bcrypt.compare(usuario.password, password)){return done(null, false)}
+                    return usuario.email === username 
+                }) 
+                console.log(existe)
+                if(!existe){
+                    return done(null, false)
+                } else {
+                    console.log('Logged')
+                    return done(null, existe)
+                }
+            }
+        )
+    )
 
-passport.deserializeUser((username, done) => {
-    const usuarioDZ = usuarios.find( usuario => usuario.email === username)
-    console.log(JSON.stringify(usuarioDZ) + ' deserializado')
-    done(null, usuarioDZ)
-})
+    passport.serializeUser((usuario, done) => {
+        console.log(usuario.email + ' serializado')
+        done(null, usuario.email)
+    })
 
-//TEMPLATE
-app.set("views", path.join(__dirname, 'views'))
+    passport.deserializeUser((username, done) => {
+        const usuarioDZ = usuarios.find( usuario => usuario.email === username)
+        console.log(JSON.stringify(usuarioDZ) + ' deserializado')
+        done(null, usuarioDZ)
+    })
 
-const hbs = handlebars.create({
-    extname: ".hbs",
-    defaultLayout: "main.hbs",
-    layoutsDir: './views/layouts'
-});
+    //TEMPLATE
+    app.set("views", path.join(__dirname, 'views'))
 
-app.engine('hbs', hbs.engine);
-app.set('view engine', 'hbs');
+    const hbs = handlebars.create({
+        extname: ".hbs",
+        defaultLayout: "main.hbs",
+        layoutsDir: './views/layouts'
+    });
 
-//ROUTES
-app.get('/registrar', (req, res) => {
-    res.render('register')
-})
+    app.engine('hbs', hbs.engine);
+    app.set('view engine', 'hbs');
 
-app.post('/registrar', passport.authenticate('register', {
-    successRedirect: '/login',
-    failureRedirect: '/signup-error'
-}))
+    //ROUTES
+    app.get('/registrar', (req, res) => {
+        res.render('register')
+    })
 
-app.get('/login', (req, res) => {
-    res.render('login')
-})
+    app.post('/registrar', passport.authenticate('register', {
+        successRedirect: '/login',
+        failureRedirect: '/signup-error'
+    }))
 
-app.post('/login', passport.authenticate('login', {
-    successRedirect: '/datos',
-    failureRedirect: '/login-error'
-}))
+    app.get('/login', (req, res) => {
+        res.render('login')
+    })
 
-app.get('/login-error', (req, res) => {
-    res.render('login-error')
-})
+    app.post('/login', passport.authenticate('login', {
+        successRedirect: '/datos',
+        failureRedirect: '/login-error'
+    }))
 
-app.get('/signup-error', (req, res) => {
-    res.render('signup-error')
-})
+    app.get('/login-error', (req, res) => {
+        res.render('login-error')
+    })
 
-app.get('/logout', (req, res) => {
-    req.session.destroy()
-    res.redirect('login')
-})
+    app.get('/signup-error', (req, res) => {
+        res.render('signup-error')
+    })
 
-app.get('/datos', (req, res) => {
-    const { email, password } = req.user
-    res.render('datos', {email})
-})
+    app.get('/logout', (req, res) => {
+        req.session.destroy()
+        res.redirect('login')
+    })
 
-// DESAFIO --> RUTA INFO
-app.get('/info', (req, res) => {
-    res.render('info', {directoryName, PID, version, os, memCheck, dir, title,numCPUs})
-})
+    app.get('/datos', (req, res) => {
+        const { email, password } = req.user
+        res.render('datos', {email})
+    })
 
-//SERVER
-app.listen(PORT.puerto, () => {
-    console.log('Server up')
-})
+    // DESAFIO --> RUTA INFO - Número de CPU agregado
+    app.get('/info', (req, res) => {
+        res.render('info', {directoryName, PID, version, os, memCheck, dir, title, numCPUs})
+    })
+
+    //SERVER
+    app.listen(PORT.puerto, () => {
+        console.log('Server up')
+    })
+}
+
+
