@@ -1,0 +1,52 @@
+<div class="container text-center my-3">
+    <div class="jumbotron" style="background-color: green;color: white;">
+        <h1><i>Bienvenido {{email}}</i></h2>
+        <button class="btn btn-danger my-5" onclick="location.href='/logout'">LOGOUT</button>
+        <br>
+    </div>
+    <div>
+        <fieldset>
+          <h2>Ingrese Producto</h2>
+          <form action="http://localhost:8080/productos" method="POST">
+              Nombre: <input type="text" name="Nombre" /> Precio:
+              <input type="number" name="Precio" /> Url de la imagen del producto: <input type="url" name="Foto" />
+              <button>Enviar</button>
+          </form>
+            <br />
+        </fieldset>
+    </div>
+    <div>
+        <h2>Lista de Productos</h2>
+        {{#if listExists}}
+        <table>
+            <thead>
+                <tr>
+                
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Foto</th>
+                    
+                </tr>
+            </thead>
+                <tbody>
+                {{#each array}}
+                    <tr>
+                        
+                        <td>{{this.Nombre}}</td>
+                        <td>{{this.Precio}}</td>
+                        <td>
+                            <img src={{this.Foto}} id="foto">
+                        </td>
+
+                    </tr>
+                {{/each}}
+                </tbody>
+        </table>
+        {{else}}
+        <div id="noProd">
+            <p>No hay productos disponibles</p>
+        </div>
+        {{/if}}
+    </div>
+</div>
+
