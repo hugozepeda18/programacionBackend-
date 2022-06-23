@@ -12,6 +12,13 @@ require('dotenv').config()
 const apiRouter = require("./api")
 //DESAFIO
 const compression = require('compression')
+
+//CORRECIONES TUTOR RETO LOGGERS
+const logger = require('./loggers/loggers')
+//onst logWarning = require('./loggers/loggers')
+//const logError = require('./loggers/loggers')
+
+/*
 const log4js = require('log4js')
 
 log4js.configure({
@@ -30,7 +37,7 @@ log4js.configure({
 const logInfo = log4js.getLogger('default')
 const logWarning = log4js.getLogger('logWarn')
 const logError = log4js.getLogger('logError')
-
+*/
 const cluster = require('cluster')
 const opt = {alias: {m: 'modo'}, default: {modo: 'FORK'}}
 const MODO = parseArgs(process.argv.slice(3), opt)
@@ -154,7 +161,7 @@ if(MODO.modo === 'CLUSTER' && cluster.isPrimary){
 
     //ROUTES
     app.get('/registrar', (req, res) => {
-        logInfo.info('/registrar')
+        logger.logInfo.info('/registrar')
         res.render('register')
     })
 
@@ -164,7 +171,7 @@ if(MODO.modo === 'CLUSTER' && cluster.isPrimary){
     }))
 
     app.get('/login', (req, res) => {
-        logInfo.info('/login')
+        logger.logInfo.info('/login')
         res.render('login')
     })
 
@@ -174,35 +181,35 @@ if(MODO.modo === 'CLUSTER' && cluster.isPrimary){
     }))
 
     app.get('/login-error', (req, res) => {
-        logInfo.info('/login-error')
+        logger.logInfo.info('/login-error')
         res.render('login-error')
     })
 
     app.get('/signup-error', (req, res) => {
-        logInfo.info('/signup-error')
+        logger.logInfo.info('/signup-error')
         res.render('signup-error')
     })
 
     app.get('/logout', (req, res) => {
-        logInfo.info('/logout')
+        logger.logInfo.info('/logout')
         req.session.destroy()
         res.redirect('login')
     })
 
     app.get('/datos', (req, res) => {
-        logInfo.info('/datos')
+        logger.logInfo.info('/datos')
         const { email, password } = req.user
         res.render('datos', {email})
     })
 
     app.get('/info', (req, res) => {
-        logInfo.info('/info')
+        logger.logInfo.info('/info')
         res.render('info', {directoryName, PID, version, os, memCheck, dir, title, numCPUs})
     })
 
     // DESAFIO -> Ruta con console.log
     app.get('/info-log', (req, res) => {
-        logInfo.info('/info')
+        logger.logInfo.info('/info')
         console.log(
             `Nombre del directorio: ${directoryName}
              Número de procesa: ${PID}
@@ -217,14 +224,14 @@ if(MODO.modo === 'CLUSTER' && cluster.isPrimary){
 
     // DESAFIO -> Agregué una ruta para comparar los beneficios de la compresión
     app.get('/info-compress', compression(), (req, res) => { 
-        logInfo.info('/info-compress')
+        logger.logInfo.info('/info-compress')
         res.render('info', {directoryName, PID, version, os, memCheck, dir, title, numCPUs})
     })
 
     //DESAFIO -> Ruta de peticiones a rutas inexistentes
     app.use((req,res) => {
-        logWarning.warn('Ruta incorrecta/inexistente')
-        logInfo.warn('Ruta incorrecta/inexistente')
+        logger.logWarning.warn('Ruta incorrecta/inexistente')
+        logger.logInfo.warn('Ruta incorrecta/inexistente')
         res.send('Ruta incorrecta/inexistente')
     })
   

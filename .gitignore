@@ -40,6 +40,7 @@
 /nginx-1.21.6/
 /servidorConBalanceCarga/node_modules/
 /loggersGzipPerformance/node_modules/
+/deployHeroku/node_modules/
 
 /inicioSesion/node_modules/
 /objetoProcess/node_modules/
