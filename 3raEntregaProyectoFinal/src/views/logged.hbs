@@ -1,0 +1,31 @@
+<div class="container text-center my-3">
+    <div class="jumbotron" style="background-color: green;color: white;">
+        <h1><i>Bienvenido {{name}}</i></h2>
+        <button class="btn btn-danger my-5" onclick="location.href='/logout'">LOGOUT</button>
+        <br>
+    </div>
+    <div>
+        <ul>
+            <li>
+                <a href="/api/user/shoppingCar">Mi carrito</a>
+            </li>
+            <li>
+                <a href="/api/productos/productsPage">Productos</a>
+            </li>
+        </ul>
+    </div>
+
+    <div>
+        <fieldset>
+          <h2>Ingrese Producto</h2>
+          <form action="http://localhost:8080/productos" method="POST">
+              <label for="product">Nombre:</label><input type="text" name="product" /> 
+              <label for="price">Precio:</label><input type="text" name="price" /> 
+              <label for="photo">Url de la imagen del producto:</label><input type="text" name="photo" />
+              <button>Enviar</button>
+          </form>
+            <br />
+        </fieldset>
+    </div>
+</div>
+

@@ -1,0 +1,39 @@
+html
+  head
+    title Carrito de compra page
+    style
+      include ../style/productsStyle.css
+
+  body
+
+    div(class="topNav") 
+      div(class="header")
+        div(class="topNav Heading")
+            h2 Mi Carrito de compras 
+        div(class="topNav Heading") Items
+            p 10
+        div(class="topNav Heading") Costo
+            p $400
+        div(class="topNav Heading")
+            a(href="") Eliminar Carrito
+        div(class="topNav Heading")
+            a(href="") Realizar compra
+
+    div(class="container")
+      div(class="header")
+        h3(class="heading") Todos los Productos 
+        h3(class="heading") Producto 
+        h3(class="heading") Precio
+
+
+      each prod in products
+        div(class="producto")
+          div(class="imagen")
+            img(src="images/Mexican Sombrero.png")
+          div(class="about")
+            h1(class="nombre") #{prod.nombre}
+            p(class="descripcion") #{prod.descripcion}
+          div(class="precio") $#{prod.precio}
+
+
+      

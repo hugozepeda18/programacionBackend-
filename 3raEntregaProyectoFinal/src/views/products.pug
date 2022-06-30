@@ -1,0 +1,30 @@
+html
+  head
+    title Porductos page
+    style
+      include ../style/productsStyle.css
+
+  body 
+
+    div(class="container")
+      div(class="header")
+        h3(class="heading") Todos los Productos 
+        h3(class="heading") Producto 
+        h3(class="heading") Precio
+        h3(class="heading") Stock
+        h3(class="heading") 
+
+      each prod in products
+        div(class="producto")
+          div(class="imagen")
+            img(src="images/Mexican Sombrero.png")
+          div(class="about")
+            h1(class="nombre") #{prod.nombre}
+            p(class="descripcion") #{prod.descripcion}
+          div(class="precio") $#{prod.precio}
+          div(class="stock") #{prod.stock}
+          div(class="comprar") Anadir a Carrito
+            form(name="submitForm" method="POST" action="/api/carrito/" + carritoId + "/productos/" + prod.id)
+              input(type="hidden" name="param1" value="param1Value")
+              a(HREF="javascript:document.submitForm.submit()")
+                button(class="addProd")
