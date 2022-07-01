@@ -2,6 +2,11 @@ import logger from '../loggers/loggers.js'
 import express from 'express'
 import os from 'os'
 
+import twilio from 'twilio'
+const accountSid = 'AC2a4a5abecf98230be6a5fc9744482b70'
+const authToken = 'b0d8b3c6cc7934851f6560ff7d251b51'
+const client = twilio(accountSid, authToken)
+
 var router = express.Router()
 
 router.get('/home', (req, res)=> {
@@ -71,10 +76,9 @@ router.get('/info', (req, res) => {
 router.get("/register/error", (req, res) => {
     res.render('signupErr')
 })
+
 router.get("/login/error", (req, res) => {
     res.render('loginErr')
 })
-
-
 
 export default router

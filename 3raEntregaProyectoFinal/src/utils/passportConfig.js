@@ -8,10 +8,10 @@ import {transporter, testEmail} from './messagingUtils.js'
 
 const sendRegistrationEmail = async() =>{
     const mailOptions = {
-            from: 'E-commerce', // Sender address
-            to: testEmail, // List of recipients
-            subject: 'Registro exitoso', // Subject line
-            text: 'Bienvenido a mi e-commerce!', // Plain text body
+            from: 'E-commerce', 
+            to: testEmail,
+            subject: 'Registro exitoso', 
+            text: 'Bienvenido a mi e-commerce!', 
     }
     transporter.sendMail(mailOptions, function(err, info) {
         if (err) {
