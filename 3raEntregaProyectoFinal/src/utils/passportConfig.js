@@ -1,26 +1,9 @@
 import passport from 'passport'
-
 import {Strategy as localStrategy}  from 'passport-local'
 import encryptUtils  from '../utils/encryptPassword.js'
 import userDao from '../daos/userDao.js'
 import logger from '../loggers/loggers.js'
-import {transporter, testEmail} from './messagingUtils.js'
-
-const sendRegistrationEmail = async() =>{
-    const mailOptions = {
-            from: 'E-commerce', 
-            to: testEmail,
-            subject: 'Registro exitoso', 
-            text: 'Bienvenido a mi e-commerce!', 
-    }
-    transporter.sendMail(mailOptions, function(err, info) {
-        if (err) {
-          logger.logError.error(err)
-        } else {
-          logger.logInfo.info("Correo enviado con éxito");
-        }
-    });
-}
+import {sendRegistrationEmail} from './messagingUtils.js'
 
 passport.use('register',
     new localStrategy(

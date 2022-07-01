@@ -17,30 +17,30 @@
                     <th>Añadir</th>
                 </tr>
             </thead>
-                <tbody>
-                {{#each prod}}
-                    <tr>
-                        <td><img src="../images/sopaMaruchan.png" alt="Producto"></td>
-                        <td>{{this.nombre}}</td>
-                        <td>{{this.descripcion}}</td>
-                        <td>{{this.precio}}</td>
-                        <td>{{this.stock}}</td>
-                        <td>
-                            <form
-                            class='form'
-                            action="/api/carrito/" + carritoId + "/productos/" + prod.id
-                            method='post'
-                            role='form'
-                            autocomplete='off'
-                            >
-                            <input type="hidden" name="param1" value="param1Value">
-                            <a href="javascript:document.submitForm.submit()"><button>Añadir a Carrito de Compras</button></a>
-                            </form>
-                        </td>
+            <tbody>
+            {{#each prod}}
+                <tr>
+                    <td><img src="../images/sopaMaruchan.png" alt="Producto"></td>
+                    <td>{{this.nombre}}</td>
+                    <td>{{this.descripcion}}</td>
+                    <td>{{this.precio}}</td>
+                    <td>{{this.stock}}</td>
+                    <td>
+                        <form
+                        class='form'
+                        action="/api/carrito/" + carritoId + "/productos/" + prod.id
+                        method='post'
+                        role='form'
+                        autocomplete='off'
+                        >
+                        <input type="hidden" name="param1" value="param1Value">
+                        <a href="javascript:document.submitForm.submit()"><button>Añadir a Carrito de Compras</button></a>
+                        </form>
+                    </td>
 
-                    </tr>
-                {{/each}}
-                </tbody>
+                </tr>
+            {{/each}}
+            </tbody>
         </table>
         {{else}}
         <div id="noProd">

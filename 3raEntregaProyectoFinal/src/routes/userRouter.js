@@ -1,11 +1,10 @@
 import logger from '../loggers/loggers.js'
 import express from 'express'
-
 import carritoDao from '../daos/carritosMongoDao.js'
 import userMongoDao from '../daos/userDao.js'
-
 import passport from 'passport'
 import carritosMongoDao from '../daos/carritosMongoDao.js'
+import {sendCheckoutEmail, sendCheckoutMessage} from '../utils/messagingUtils.js'
 
 var router = express.Router()
 
@@ -50,7 +49,39 @@ router.get('/shoppingCar', async (req, res) => {
     let products = await carritosMongoDao.getProdsInCar(userInfo.shoppingCar)
     logger.logInfo.info(`Productos en el carrito ${products?.length}`)
 
-    return res.render('shoppingCar', {products: products? products: []})
+    let totalProds = products?.length
+    let price = await products.reduce((prevProd, curProd) => {
+        let suma = parseInt(prevProd.precio) + parseInt(curProd.precio)
+        return suma
+    })
+
+    return res.render('shoppingCar', {products: products? products: [], price: price, totalProds: totalProds})
+})
+
+router.post('/buyShoppingCart', async(req, res) =>{
+    logger.logInfo.info("Usuario compró el carrito de compras")
+    let price = req.body.price
+    let products = req.body.prods
+    logger.logInfo.info(`Lista de productos: ${products}`)
+
+    try{
+        logger.logInfo.info(`Enviando correo de compra`)
+
+        await sendCheckoutEmail(req.user, products)
+    }
+    catch(e){
+        logger.logInfo.error(e)
+    }
+    try{
+        logger.logInfo.info(`Enviando mensaje de compra`)
+
+        await sendCheckoutMessage(req.user, products)
+    }
+    catch(e){
+        logger.logInfo.error(e)
+    }
+
+    res.render('checkout', {products: products? products: [], price: price})
 })
 
 export default router

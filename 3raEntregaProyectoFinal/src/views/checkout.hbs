@@ -1,0 +1,37 @@
+<div class="container text-center my-3">
+    <div class="jumbotron" style="background-color: salmon;color: white;">
+        <h1>Checkout</h1>
+        <button class="btn btn-warning my-5" onclick="location.href='/home'">HOME</button>
+    </div>
+    <div>
+        <h2>Gracias por su compra!</h2>
+        <h2>Total: {{price}}</h2>
+    </div>
+    <div>
+        <h2>La compra fue:</h2>
+        {{#if products}}
+        <table>
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+                <tbody>
+                {{#each prod}}
+                    <tr>
+                        <td><img src="../images/sopaMaruchan.png" alt="Producto"></td>
+                        <td>{{this.nombre}}</td>
+                        <td>{{this.precio}}</td>
+                    </tr>
+                {{/each}}
+                </tbody>
+        </table>
+        {{else}}
+        <div id="noProd">
+            <p>No hay productos disponibles</p>
+        </div>
+        {{/if}}
+    </div>
+</div>

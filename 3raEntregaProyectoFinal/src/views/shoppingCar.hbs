@@ -31,6 +31,39 @@
         {{/if}}
     </div>
     <div>
-        
+        <h2>Mi carrito de compras</h2>
+        <form
+            class='form'
+            action="/api/user/buyShoppingCart"
+            method='post'
+            role='form'
+            autocomplete='off'
+            >
+            <input type="hidden" name="price1" value={{price}} >
+            <input type="hidden" name="prods" value={{products}} >
+            <a href="javascript:document.submitForm.submit()"><button>Comprar productos</button></a>
+        </form>
+        {{#if products}}
+        <table>
+            <thead>
+                <tr>
+                    <th>Artículos</th>
+                    <th>Costo</th>
+                    <th><a href="">Eliminar Carrito</a></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{totalProds}}</td>
+                    <td>{{price}}</td>
+                    <td>NOT AVAILABLE... JUST FOR NOW</td>
+                </tr>
+            </tbody>
+        </table>
+        {{else}}
+        <div id="noProd">
+            <p>No hay productos disponibles</p>
+        </div>
+        {{/if}}
     </div>
 </div>
