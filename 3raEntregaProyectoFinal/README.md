@@ -1,7 +1,7 @@
 # 3raEntregaProyectoFinal
 
 # Before running
-In .env change pwd for your MongoDB Password
+IMPORTANT: In .env change every variable with XXX
 
 # Run commands 
 node ./src/index.js --puerto 8080 --modo FORK

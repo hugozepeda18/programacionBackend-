@@ -63,10 +63,11 @@ router.put('/:id', cookieAuth(), async (req, res, next)=> {
 
 router.get('/productsPage', async (req, res) => {
     let user = req.user
+    let carId = user.shoppingCar ? user.shoppingCar : 10
     let products = await productDao.getAllProd()
     logger.logInfo.info("Accediendo")
     if(products){
-        return res.render('products', {products: products, carritoId: user.shoppingCar})
+        return res.render('products', {products: products, carritoId: cardId})
     }
     return res.status(500).end();
 })

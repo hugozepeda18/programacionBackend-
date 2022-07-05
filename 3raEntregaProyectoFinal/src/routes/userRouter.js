@@ -22,7 +22,6 @@ router.post('/login', passport.authenticate('login', {
 router.get('/shoppingCar', async (req, res) => {
     let user = req.user
     logger.logInfo.info(`Entrando a sus carritos de compra para el ${user}`)
-    
     try{
         var userInfo = await userMongoDao.findUser(user.email)
     }
@@ -32,11 +31,10 @@ router.get('/shoppingCar', async (req, res) => {
 
     if(userInfo.shoppingCar == null){
         logger.logInfo.warn(`El usuario no cuenta con carrito de compras`)
-        //CreateCar for user
         logger.logInfo.info("Agregando carrito de compras al usuario")
         let newCarId = await carritoDao.addShoppingCar()
 
-        let addCarRes = await userMongoDao.addCarToUser(user, newCarId)
+        let addCarRes = await userMongoDao.addCarToUser(userInfo.email, newCarId)
         if(!addCarRes){
             logger.logInfo.warn("El carrito de compras no se agrego")
 
