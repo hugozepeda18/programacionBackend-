@@ -1,15 +1,16 @@
 import {producto} from '../models/productosModel.js';
 import mongoose from 'mongoose';
-import config from '../config/config.js';
 
 //import loggers
 import logger from '../loggers/loggers.js'
+
+const mongoURL = process.env.MONGOVARIABLE + ':' + process.env.MONGOURL
 
 class productMongoDao{
 
   constructor(){
       logger.logInfo.info("Productos inicializados en MongoDB")
-      this.URL = config.mongoURL
+      this.URL = mongoURL;
   }
 
   connect2Db = async () => {

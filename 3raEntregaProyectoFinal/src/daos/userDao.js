@@ -4,12 +4,13 @@ import logger  from '../loggers/loggers.js'
 import user from "../models/userModel.js";
 
 import mongoose from "mongoose";
-import config from "../config/config.js";
+
+const mongoURL = process.env.MONGOVARIABLE + ':' + process.env.MONGOURL
 
 class userMongoDao {
   constructor() {
     logger.logInfo.info("Usuarios inicializados en MongoDB");
-    this.URL = config.mongoURL;
+    this.URL = mongoURL;
   }
 
   connect2Db = async () => {

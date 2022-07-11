@@ -1,15 +1,16 @@
 import { carrito } from '../models/carritoModel.js';
 
 import mongoose from 'mongoose';
-import config from '../config/config.js';
 
 import loggers from '../loggers/loggers.js';
+
+const mongoURL = process.env.MONGOVARIABLE + ':' + process.env.MONGOURL
 
 class carritoMongoDao{
 
   constructor(){
       loggers.logInfo.info("Carritos inicializados en MongoDB")
-      this.URL = config.mongoURL
+      this.URL = mongoURL;
   }
 
   connect2Db = async () => {
