@@ -3,7 +3,7 @@ import twilio from 'twilio'
 
 const accountSid = process.env.ACCSID
 const authToken = process.env.AUTHTOKEN
-const yourNumber = process.env.YOURNUMBER
+const yourNumber = process.env.YOURPERSONALNUMBER
 const twilioNumber = process.env.TWILIONUMBER
 
 const client = twilio(accountSid, authToken)
@@ -29,14 +29,14 @@ client.messages
   })
   .then((message) => console.log(message.sid));
 
-const testEmail = "daron.wilkinson53@ethereal.email"
+const testEmail = process.env.USERETHEREAL
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.ethereal.email',
     port: 587,
     auth: {
-        user: 'daron.wilkinson53@ethereal.email',
-        pass: 'JcMH5482GJgwJMyHmk'
+        user: process.env.USERETHEREAL,
+        pass: process.env.PASSWORDETHEREAL
     }
 });
 
