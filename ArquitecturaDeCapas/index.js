@@ -3,11 +3,11 @@ const handlebars = require('express-handlebars')
 const path = require("path")
 const parseArgs = require('minimist')
 require('dotenv').config()
-const logger = require('./loggers/loggers')
+const logger = require('./src/loggers/loggers')
 
 //ROUTES
-const randomRouter = require("./routes/randomRouter")
-const userRouter = require("./routes/userRouter")
+const randomRouter = require("./src/routes/randomRouter")
+const userRouter = require("./src/routes/userRouter")
 
 const cluster = require('cluster')
 const opt = {alias: {m: 'modo'}, default: {modo: 'FORK'}}
@@ -49,7 +49,7 @@ if(MODO.modo === 'CLUSTER' && cluster.isPrimary){
     const hbs = handlebars.create({
         extname: ".hbs",
         defaultLayout: "main.hbs",
-        layoutsDir: './views/layouts'
+        layoutsDir: './src/views/layouts'
     });
 
     app.engine('hbs', hbs.engine);
