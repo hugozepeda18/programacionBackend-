@@ -45,6 +45,7 @@
 /loggersGzipPerformance/node_modules/
 /deployHeroku/node_modules/
 /ArquitecturaDeCapas/src/node_modules/
+/mejorandoArquitecturadeAPI/src/node_modules/
 
 /inicioSesion/node_modules/
 /objetoProcess/node_modules/
