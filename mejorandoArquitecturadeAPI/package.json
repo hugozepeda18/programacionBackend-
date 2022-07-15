@@ -8,7 +8,7 @@
     "start": "0x index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Hugo Armando Zepeda Ruiz",
   "license": "ISC",
   "dependencies": {
     "autocannon": "^7.9.0",
