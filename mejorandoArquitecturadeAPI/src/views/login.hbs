@@ -4,15 +4,15 @@
     <br />
     <form
       class='form'
-      action='/login'
+      action='/api/user/login'
       method='post'
       role='form'
       autocomplete='off'
     >
       <div class='form-group'>
         <input
-          id='username'
-          name='username'
+          id='email'
+          name='email'
           placeholder='email'
           class='form-control'
           type='email'
@@ -39,7 +39,7 @@
     <div class='text-left'>
       <button
         class='btn btn-success my-3'
-        onclick="location.href = '/registrar'"
+        onclick="location.href = '/register'"
       >Ir a Register</button>
     </div>
   </div>

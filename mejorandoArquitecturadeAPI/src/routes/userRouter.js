@@ -1,116 +1,82 @@
-const express = require("express")
-const compression = require('compression')
-const cookieParser = require ('cookie-parser')
-const path = require("path")
-const session = require('express-session')
-const { Router } = express
-const router = Router()
+import logger from '../loggers/loggers.js'
+import express from 'express'
+import {objectsDaos} from '../daos/factoryDao.js'
+import passport from 'passport'
+import {sendCheckoutEmail, sendCheckoutMessage} from '../utils/messagingUtils.js'
 
-//SELF
-const passport = require("../autenticacion/passport")
-const logger = require('../loggers/loggers')
+const {carritoDao, userDao} = objectsDaos
 
-//RUTA INFO
-const directoryName = path.basename(__dirname);
-const PID = process.pid
-const version = process.version
-const os = process.platform
-const memCheck = process.memoryUsage().rss
-const dir = process.cwd()
-const title = process.title
-const numCPUs = require('os').cpus().length
+var router = express.Router()
 
-//.env
-const sessionAlive = process.env.TIEMPO
-const sessionWord = process.env.PALABRA
-
-router.use(cookieParser())
-router.use(
-    session({
-        secret: sessionWord,
-        resave: false,
-        saveUninitialized: false,
-        cookie: {
-            maxAge: parseInt(sessionAlive),
-        }
-    })
-)
-
-router.use(passport.initialize())
-router.use(passport.session())
-
-//ROUTES
-router.get('/registrar', (req, res) => {
-    logger.logInfo.info('/registrar')
-    res.render('register')
-})
-
-router.post('/registrar', passport.authenticate('register', {
+router.post('/register', passport.authenticate('register', {
     successRedirect: '/login',
-    failureRedirect: '/signup-error'
+    failureRedirect: '/register/error'
 }))
-
-router.get('/login', (req, res) => {
-    logger.logInfo.info('/login')
-    res.render('login')
-})
-
-router.get('/', (req, res) => {
-    logger.logInfo.info('/login')
-    res.render('login')
-})
 
 router.post('/login', passport.authenticate('login', {
-    successRedirect: '/datos',
-    failureRedirect: '/login-error'
+    successRedirect: '/home',
+    failureRedirect: '/login/error'
 }))
 
-router.get('/login-error', (req, res) => {
-    logger.logInfo.info('/login-error')
-    res.render('login-error')
+
+router.get('/shoppingCar', async (req, res) => {
+    let user = req.user
+    logger.logInfo.info(`Entrando a sus carritos de compra para el ${user}`)
+    try{
+        var userInfo = await userDao.findUser(user.email)
+    }
+    catch(e){
+        return res.end({error: e})
+    }
+
+    if(userInfo.shoppingCar == null){
+        logger.logInfo.warn(`El usuario no cuenta con carrito de compras`)
+        logger.logInfo.info("Agregando carrito de compras al usuario")
+        let newCarId = await carritoDao.addShoppingCar()
+        let addCarRes = await userDao.addCarToUser(userInfo.email, newCarId)
+        if(!addCarRes){
+            logger.logInfo.warn("El carrito de compras no se agrego")
+
+            return res.status(500).end({error: "Carrito de compras no agregado"})
+        }
+        userInfo.shoppingCar = newCarId
+    }
+    logger.logInfo.info(`Usuario ${user} tiene el carrito de compras ${userInfo.shoppingCar}`)
+    let products = await carritoDao.getProdsInCar(userInfo.shoppingCar)
+    logger.logInfo.info(`Productos en el carrito ${products?.length}`)
+    let totalProds = products?.length
+    let price = await products.reduce((prevProd, curProd) => {
+        let suma = parseInt(prevProd.precio) + parseInt(curProd.precio)
+        return suma
+    })
+
+    return res.render('shoppingCar', {products: products? products: [], price: price, totalProds: totalProds})
 })
 
-router.get('/signup-error', (req, res) => {
-    logger.logInfo.info('/signup-error')
-    res.render('signup-error')
+router.post('/buyShoppingCart', async(req, res) =>{
+    logger.logInfo.info("Usuario compró el carrito de compras")
+    let price = req.body.price
+    let products = req.body.prods
+    logger.logInfo.info(`Lista de productos: ${products}`)
+
+    try{
+        logger.logInfo.info(`Enviando correo de compra`)
+
+        await sendCheckoutEmail(req.user, products)
+    }
+    catch(e){
+        logger.logInfo.error(e)
+    }
+    try{
+        logger.logInfo.info(`Enviando mensaje de compra`)
+
+        await sendCheckoutMessage(req.user, products)
+    }
+    catch(e){
+        logger.logInfo.error(e)
+    }
+
+    res.render('checkout', {products: products? products: [], price: price})
 })
 
-router.get('/logout', (req, res) => {
-    logger.logInfo.info('/logout')
-    req.session.destroy()
-    res.redirect('login')
-})
-
-router.get('/datos', (req, res) => {
-    logger.logInfo.info('/datos')
-    const { email, password } = req.user
-    res.render('datos', {email})
-})
-
-router.get('/info', (req, res) => {
-    logger.logInfo.info('/info')
-    res.render('info', {directoryName, PID, version, os, memCheck, dir, title, numCPUs})
-})
-
-// DESAFIO -> Ruta con console.log
-router.get('/info-log', (req, res) => {
-    logger.logInfo.info('/info')
-    logger.logInfo.info(
-        `Nombre del directorio: ${directoryName}
-         Número de procesa: ${PID}
-         Versión de node: ${version}
-         Sistema Operativo: ${os}
-         Memoria: ${memCheck}
-         Directorio: ${dir}
-         Título: ${title}
-         Número de CPU: ${numCPUs}`)
-    res.render('info', {directoryName, PID, version, os, memCheck, dir, title, numCPUs})
-})
-
-// DESAFIO -> Agregué una ruta para comparar los beneficios de la compresión
-router.get('/info-compress', compression(), (req, res) => { 
-    logger.logInfo.info('/info-compress')
-    res.render('info', {directoryName, PID, version, os, memCheck, dir, title, numCPUs})
-})
-
-module.exports = router
+export default router

@@ -1,15 +1,14 @@
-# Mejorando la arquitectura de nuestra API
+# 3raEntregaProyectoFinal
 
-# Comandos para ejecutar 
+# Before running
+IMPORTANT: In .env change every variable with XXX
 
-node index.js --puerto 8080 --modo FORK
-node index.js --puerto 8080 --modo CLUSTER
+# Run commands 
+node ./src/index.js --puerto 8080 --modo FORK
+node ./src/index.js --puerto 8080 --modo CLUSTER
 
-nodemon index.js --puerto 8080 --modo FORK
-nodemon index.js --puerto 8080 --modo CLUSTER
+# For Random number generation (XXX = Numbers to generate)
+localhost:8080/api/randoms?count=XXX
 
-forever index.js --puerto 8080 --modo FORK
-forever index.js --puerto 8080 --modo CLUSTER
-
-pm2 start index.js --name="server" --watch 
-pm2 start index.js --name="server" --watch -i max
+# For Info
+localhost:8080/info

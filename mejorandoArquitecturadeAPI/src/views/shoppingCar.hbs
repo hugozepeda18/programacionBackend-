@@ -1,0 +1,69 @@
+<div class="container text-center my-3">
+    <div class="jumbotron" style="background-color: salmon;color: white;">
+        <h1>Carrito de Compras</h1>
+        <button class="btn btn-warning my-5" onclick="location.href='/home'">HOME</button>
+    </div>
+    <div>
+        <h2>Dentro del carrito hay:</h2>
+        {{#if products}}
+        <table>
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+                <tbody>
+                {{#each prod}}
+                    <tr>
+                        <td><img src="../images/sopaMaruchan.png" alt="Producto"></td>
+                        <td>{{this.nombre}}</td>
+                        <td>{{this.precio}}</td>
+                    </tr>
+                {{/each}}
+                </tbody>
+        </table>
+        {{else}}
+        <div id="noProd">
+            <p>No hay productos disponibles</p>
+        </div>
+        {{/if}}
+    </div>
+    <div>
+        <h2>Mi carrito de compras</h2>
+        <form
+            class='form'
+            action="/api/user/buyShoppingCart"
+            method='post'
+            role='form'
+            autocomplete='off'
+            >
+            <input type="hidden" name="price1" value={{price}} >
+            <input type="hidden" name="prods" value={{products}} >
+            <a href="javascript:document.submitForm.submit()"><button>Comprar productos</button></a>
+        </form>
+        {{#if products}}
+        <table>
+            <thead>
+                <tr>
+                    <th>Artículos</th>
+                    <th>Costo</th>
+                    <th><a href="">Eliminar Carrito</a></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{totalProds}}</td>
+                    <td>{{price}}</td>
+                    <td>NOT AVAILABLE... JUST FOR NOW</td>
+                </tr>
+            </tbody>
+        </table>
+        {{else}}
+        <div id="noProd">
+            <p>No hay productos disponibles</p>
+        </div>
+        {{/if}}
+    </div>
+</div>

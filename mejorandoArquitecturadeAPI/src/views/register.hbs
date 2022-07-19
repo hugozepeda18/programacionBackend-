@@ -5,7 +5,7 @@
     <br />
     <form
       class='form'
-      action='/registrar'
+      action='/api/user/register'
       method='post'
       role='form'
       autocomplete='off'
@@ -13,8 +13,8 @@
 
       <div class='form-group'>
         <input
-          id='username'
-          name='username'
+          id='email'
+          name='email'
           placeholder='email'
           class='form-control'
           type='email'
@@ -34,7 +34,62 @@
       </div>
 
       <div class='form-group'>
-        <input class='btn btn-success my-3' type='submit' value='Registrar' />
+        <input
+          id='name'
+          name='name'
+          placeholder='nombre'
+          class='form-control'
+          type='text'
+          required
+        />
+      </div>
+
+      <div class='form-group'>
+        <input
+          id='address'
+          name='address'
+          placeholder='domicilio'
+          class='form-control'
+          type='text'
+          required
+        />
+      </div>
+
+      <div class='form-group'>
+        <input
+          id='countryCode'
+          name='countryCode'
+          placeholder='código del país'
+          class='form-control'
+          type='text'
+          required
+        />
+      </div>
+
+      <div class='form-group'>
+        <input
+          id='phone'
+          name='phone'
+          placeholder='teléfono'
+          class='form-control'
+          type='tel'
+          required
+        />
+      </div>
+
+      <div class='form-group'>
+        <input
+          id='age'
+          name='age'
+          placeholder='edad'
+          class='form-control'
+          type='text'
+          required
+        />
+      </div>
+
+      <div class='form-group'>
+        <input class='btn btn-success my-3' type='submit' value='Register' />
       </div>
     </form>
 
