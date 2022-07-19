@@ -1,4 +1,4 @@
-# 3raEntregaProyectoFinal
+# Mejorando la arquitectura de nuestra API
 
 # Before running
 IMPORTANT: In .env change every variable with XXX

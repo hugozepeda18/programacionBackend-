@@ -1,7 +1,7 @@
 import passport from 'passport'
 import {Strategy as localStrategy}  from 'passport-local'
 import encryptUtils  from '../utils/encryptPassword.js'
-import userDao from '../daos/userDao.js'
+import userDao from '../daos/userMongoDao.js'
 import logger from '../loggers/loggers.js'
 import {sendRegistrationEmail} from './messagingUtils.js'
 

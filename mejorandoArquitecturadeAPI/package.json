@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "name": "3raentregaproyectofinal",
+  "name": "mejorandoArquitecturadeAPI",
   "version": "1.0.0",
   "description": "copy the .envTemplate and paste it with name .env\r Put the password for mongo DB in pwd\r remove all other DBCONNECTION entries except for the one that is to be used\r - for mongo have only \"mongo\"\r - for firebase have \"firebase\"\r - for filesystem have \"filesystem\"\r # RUN\r npm run start",
   "main": "index.js",

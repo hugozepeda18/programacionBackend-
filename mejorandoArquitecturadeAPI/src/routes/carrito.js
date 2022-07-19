@@ -1,7 +1,7 @@
 import express from 'express'
 
-import productsDao from '../daos/productsDao.js'
-import carritoDao from '../daos/carritosMongoDao.js'
+import productsDao from '../daos/productMongoDao.js'
+import carritoDao from '../daos/carritoMongoDao.js'
 
 const router = express.Router()
 

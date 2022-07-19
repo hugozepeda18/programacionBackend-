@@ -1,7 +1,7 @@
 
 import express from 'express'
 
-import productDao from '../daos/productsDao.js'
+import productDao from '../daos/productMongoDao.js'
 import cookieAuth from '../utils/authUtils.js'
 
 //import loggers
