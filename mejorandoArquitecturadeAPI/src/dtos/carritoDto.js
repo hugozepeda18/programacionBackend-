@@ -1,3 +1,5 @@
+//TODO: Mandar a DATA
+
 class carritoDto{
     constructor(carritoData){
         this.id = carritoData.id

@@ -1,3 +1,5 @@
+// TODO: Mandar a utils
+
 import log4js from 'log4js'
 
 log4js.configure({
